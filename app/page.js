@@ -35,7 +35,7 @@ export default function Home() {
         </Link>
       </nav>
 
-      <h1><caches>Mr Aunwat Somte</caches></h1>
+      <h1><center>Mr Aunwat Somte</center></h1>
     </>
   );
 }
