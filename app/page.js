@@ -5,7 +5,7 @@ export default function Home() {
     <>
       <Carousel />
       <h1 className="text-4xl text-center text-blue-700 font-semibold my-8">
-        Home Page
+        รัก พ.อ ครับ
       </h1>
     </>
   );
