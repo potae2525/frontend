@@ -89,7 +89,7 @@ export default function Carousel() {
         }
 
         .carousel-img {
-          object-fit: contain;
+          object-fit: cover; /* เปลี่ยนจาก contain เป็น cover */
         }
 
         .carousel-control-prev-icon,
