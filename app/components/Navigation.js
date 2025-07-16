@@ -53,17 +53,26 @@ export default function Navigation() {
                 </Link>
               </li>
             </ul>
-            <form className="d-flex" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="ค้นหา"
-                aria-label="Search"
-              />
-              <button className="btn btn-success" type="submit">
-                ค้นหา
-              </button>
-            </form>
+
+            <div className="d-flex align-items-center gap-2">
+              <form className="d-flex me-2" role="search">
+                <input
+                  className="form-control me-2"
+                  type="search"
+                  placeholder="ค้นหา"
+                  aria-label="Search"
+                />
+                <button className="btn btn-success" type="submit">
+                  ค้นหา
+                </button>
+              </form>
+              <Link href="/login" className="btn btn-outline-light fw-semibold" onClick={closeMenu}>
+                เข้าสู่ระบบ
+              </Link>
+              <Link href="/apply" className="btn btn-light text-dark fw-semibold" onClick={closeMenu}>
+                สมัครสมาชิก
+              </Link>
+            </div>
           </div>
         </div>
       </nav>
@@ -85,6 +94,7 @@ export default function Navigation() {
           font-size: 1.1rem;
           transition: color 0.3s ease;
         }
+
         .nav-link:hover,
         .nav-link.active {
           color: #4ade80;
@@ -105,6 +115,16 @@ export default function Navigation() {
 
         input.form-control {
           font-size: 1rem;
+        }
+
+        .btn-outline-light:hover {
+          background-color: #4ade80;
+          color: white;
+        }
+
+        .btn-light:hover {
+          background-color: #22c55e;
+          color: white;
         }
       `}</style>
     </>
