@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { useEffect } from "react";
 
 export default function Carousel() {
@@ -15,41 +14,55 @@ export default function Carousel() {
       <div className="carousel-inner rounded shadow-lg overflow-hidden">
         {/* Slide 1 */}
         <div className="carousel-item active">
-          <div className="img-wrapper">
-            <Image
-              src="/image/sliders/0.1.png"
-              alt="Slide 1"
-              fill
-              className="carousel-img"
-              priority
-              sizes="100vw"
-            />
+          <div className="video-wrapper">
+            <video
+              className="carousel-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+            >
+              <source src="/image/video/444.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
 
         {/* Slide 2 */}
         <div className="carousel-item">
-          <div className="img-wrapper">
-            <Image
-              src="/image/sliders/0.2.jpg"
-              alt="Slide 2"
-              fill
-              className="carousel-img"
-              sizes="100vw"
-            />
+          <div className="video-wrapper">
+            <video
+              className="carousel-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+            >
+              <source src="/image/video/555.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
 
         {/* Slide 3 */}
         <div className="carousel-item">
-          <div className="img-wrapper">
-            <Image
-              src="/image/sliders/0.3.png"
-              alt="Slide 3"
-              fill
-              className="carousel-img"
-              sizes="100vw"
-            />
+          <div className="video-wrapper">
+            <video
+              className="carousel-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              disablePictureInPicture
+            >
+              <source src="/image/video/666.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </div>
@@ -81,15 +94,20 @@ export default function Carousel() {
           margin: 2rem auto;
         }
 
-        .img-wrapper {
+        .video-wrapper {
           position: relative;
           width: 100%;
           aspect-ratio: 1920 / 690;
-          background-color: #000; /* ป้องกันเวลาภาพยังโหลดไม่ทัน */
+          background-color: #000;
         }
 
-        .carousel-img {
-          object-fit: cover; /* เปลี่ยนจาก contain เป็น cover */
+        .carousel-video {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
 
         .carousel-control-prev-icon,
@@ -102,7 +120,7 @@ export default function Carousel() {
         }
 
         @media (max-width: 768px) {
-          .img-wrapper {
+          .video-wrapper {
             aspect-ratio: 16 / 9;
           }
         }
