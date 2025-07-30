@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
-export default function ตัวอย่างฟอร์ม() {
+export default function Register() {
   const [form, setForm] = useState({
     prefix: "",
     username: "",
@@ -24,7 +25,7 @@ export default function ตัวอย่างฟอร์ม() {
   const [objUrl, setObjUrl] = useState(null);
 
   const handleChange = (e) => {
-    const { id, value, type, checked, name } = e.target;
+    const { id, value, type, checked } = e.target;
 
     if (type === "radio") {
       setForm((f) => ({ ...f, gender: value }));
@@ -39,7 +40,7 @@ export default function ตัวอย่างฟอร์ม() {
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -64,27 +65,72 @@ export default function ตัวอย่างฟอร์ม() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setError("");
-      return; // ไม่ล้างฟอร์ม
+
+      // แสดง Swal แจ้งเตือน error
+      const firstError = Object.values(newErrors)[0];
+      await Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: firstError,
+        footer: '<a href="#">ตรวจสอบข้อมูลและลองใหม่อีกครั้ง</a>',
+        draggable: true,
+      });
+
+      return;
     }
 
-    // ถ้าไม่มี error ให้ล้างฟอร์มและแจ้ง success
-    setErrors({});
-    setError("");
-    alert("✅ สมัครสำเร็จ!");
-    setForm({
-      prefix: "",
-      username: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: "",
-      gender: "",
-      birthdate: "",
-      textarea: "",
-      password: "",
-      confirmPassword: "",
-      acceptTerms: false,
-    });
+    try {
+      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/users", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstname: form.firstName,
+          lastname: form.lastName,
+          fullname: `${form.firstName} ${form.lastName}`,
+          username: form.username,
+          password: form.password,
+        }),
+      });
+
+      const result = await res.json();
+      console.log(result);
+
+      await Swal.fire({
+        title: "สมัครสำเร็จ!",
+        icon: "success",
+        draggable: true,
+      });
+
+      setForm({
+        prefix: "",
+        username: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        address: "",
+        gender: "",
+        birthdate: "",
+        textarea: "",
+        password: "",
+        confirmPassword: "",
+        acceptTerms: false,
+      });
+      setErrors({});
+      setError("");
+    } catch (err) {
+      console.error(err);
+
+      await Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "เกิดข้อผิดพลาดในการสมัคร กรุณาลองใหม่อีกครั้ง",
+        footer: '<a href="#">หากปัญหายังคงอยู่ ติดต่อฝ่ายสนับสนุน</a>',
+        draggable: true,
+      });
+    }
   };
 
   const handleBgChange = (e) => {

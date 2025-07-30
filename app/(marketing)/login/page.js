@@ -2,12 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Swal from "sweetalert2"; // เพิ่ม SweetAlert2
 
 export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // เก็บ error ข้อความ
   const [errors, setErrors] = useState({ email: "", password: "" });
 
   const validate = () => {
@@ -28,23 +27,34 @@ export default function SignInForm() {
     }
 
     setErrors(newErrors);
+
+    if (!valid) {
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "กรุณากรอกข้อมูลให้ถูกต้อง",
+        footer: '<a href="#">ทำไมฉันถึงพบปัญหานี้?</a>',
+      });
+    }
+
     return valid;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!validate()) {
-      return; // ถ้าไม่ผ่าน validation หยุด
-    }
+    if (!validate()) return;
 
-    // ทำงานกับ backend ได้ที่นี่
-    alert("เข้าสู่ระบบสำเร็จ!");
+    Swal.fire({
+      icon: "success",
+      title: "เข้าสู่ระบบสำเร็จ!",
+      text: `ยินดีต้อนรับ, ${email}`,
+    });
   };
 
   return (
     <>
-      {/* Background Layer */}
+      {/* พื้นหลัง */}
       <div
         style={{
           position: "fixed",
@@ -61,7 +71,7 @@ export default function SignInForm() {
           zIndex: -1,
         }}
       />
-      {/* Content */}
+
       <div
         className="d-flex justify-content-center align-items-center px-3"
         style={{
@@ -84,7 +94,7 @@ export default function SignInForm() {
           }}
           noValidate
         >
-          {/* Logo */}
+          {/* โลโก้ */}
           <div className="d-flex justify-content-center mb-4">
             <Image
               src="/image/img/op.jpg"
@@ -104,45 +114,21 @@ export default function SignInForm() {
 
           {/* Email */}
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="form-label fw-semibold"
-              style={{ fontSize: "1rem" }}
-            >
+            <label htmlFor="email" className="form-label fw-semibold">
               อีเมล
             </label>
             <input
               type="email"
               id="email"
-              className={`form-control border-0 shadow-sm rounded-4 ${
+              className={`form-control shadow-sm rounded-4 ${
                 errors.email ? "is-invalid" : ""
               }`}
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{
-                fontSize: "1rem",
-                padding: "14px 16px",
-                transition: "box-shadow 0.3s ease",
-                boxShadow: errors.email
-                  ? "0 0 0 0.25rem rgba(220,53,69,.25)"
-                  : "none",
-                border: errors.email ? "1px solid #dc3545" : "none",
-              }}
-              onFocus={(e) =>
-                (e.target.style.boxShadow = errors.email
-                  ? "0 0 0 0.25rem rgba(220,53,69,.5)"
-                  : "0 0 10px 2px #3b82f6")
-              }
-              onBlur={(e) =>
-                (e.target.style.boxShadow = errors.email ? "0 0 0 0.25rem rgba(220,53,69,.25)" : "none")
-              }
             />
             {errors.email && (
-              <div
-                className="invalid-feedback"
-                style={{ display: "block", fontSize: 13, color: "#dc3545" }}
-              >
+              <div className="invalid-feedback" style={{ display: "block" }}>
                 {errors.email}
               </div>
             )}
@@ -150,64 +136,34 @@ export default function SignInForm() {
 
           {/* Password */}
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="form-label fw-semibold"
-              style={{ fontSize: "1rem" }}
-            >
+            <label htmlFor="password" className="form-label fw-semibold">
               รหัสผ่าน
             </label>
             <input
               type="password"
               id="password"
-              className={`form-control border-0 shadow-sm rounded-4 ${
+              className={`form-control shadow-sm rounded-4 ${
                 errors.password ? "is-invalid" : ""
               }`}
               placeholder="********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                fontSize: "1rem",
-                padding: "14px 16px",
-                transition: "box-shadow 0.3s ease",
-                boxShadow: errors.password
-                  ? "0 0 0 0.25rem rgba(220,53,69,.25)"
-                  : "none",
-                border: errors.password ? "1px solid #dc3545" : "none",
-              }}
-              onFocus={(e) =>
-                (e.target.style.boxShadow = errors.password
-                  ? "0 0 0 0.25rem rgba(220,53,69,.5)"
-                  : "0 0 10px 2px #3b82f6")
-              }
-              onBlur={(e) =>
-                (e.target.style.boxShadow = errors.password
-                  ? "0 0 0 0.25rem rgba(220,53,69,.25)"
-                  : "none")
-              }
             />
             {errors.password && (
-              <div
-                className="invalid-feedback"
-                style={{ display: "block", fontSize: 13, color: "#dc3545" }}
-              >
+              <div className="invalid-feedback" style={{ display: "block" }}>
                 {errors.password}
               </div>
             )}
           </div>
 
-          {/* Forgot Password */}
+          {/* ลืมรหัสผ่าน */}
           <div className="mb-4 text-end">
-            <Link
-              href="/forgot-password"
-              className="text-decoration-none small text-secondary"
-              style={{ fontWeight: "500" }}
-            >
+            <Link href="/forgot-password" className="text-secondary small">
               ลืมรหัสผ่าน?
             </Link>
           </div>
 
-          {/* Submit Button */}
+          {/* ปุ่มเข้าสู่ระบบ */}
           <button
             type="submit"
             className="btn btn-primary w-100 fw-semibold"
@@ -215,31 +171,15 @@ export default function SignInForm() {
               borderRadius: "2rem",
               padding: "12px 0",
               fontSize: "1.1rem",
-              boxShadow: "0 6px 20px rgba(59, 130, 246, 0.4)",
-              transition: "transform 0.2s ease, box-shadow 0.2s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.boxShadow = "0 8px 25px rgba(59, 130, 246, 0.6)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(59, 130, 246, 0.4)";
             }}
           >
             เข้าสู่ระบบ
           </button>
 
-          {/* Register Link */}
+          {/* สมัครสมาชิก */}
           <div className="mt-5 text-center" style={{ fontSize: "0.95rem" }}>
-            <span className="text-secondary" style={{ fontWeight: "500" }}>
-              ยังไม่มีบัญชี?
-            </span>{" "}
-            <Link
-              href="/apply"
-              className="text-decoration-none text-primary fw-semibold"
-              style={{ transition: "color 0.3s" }}
-            >
+            <span className="text-secondary fw-medium">ยังไม่มีบัญชี?</span>{" "}
+            <Link href="/apply" className="text-primary fw-semibold">
               สมัครสมาชิก
             </Link>
           </div>

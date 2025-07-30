@@ -1,29 +1,24 @@
 "use client";
-import React from "react";
-import Head from "next/head";
+
 import Image from "next/image";
 
-const AboutPage = () => {
+export default function AboutPage() {
   return (
     <>
-      <Head>
-        <title>เกี่ยวกับเรา</title>
-        <meta name="description" content="เกี่ยวกับบริษัท ซีเจ ซอฟท์ จำกัด" />
-      </Head>
-
       <div className="background-container">
-        <Image
-          src="/image/img/021.jpg"
-          alt="Background"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          priority
-        />
+        <div className="image-wrapper">
+          <Image
+            src="/image/img/021.jpg"
+            alt="Background"
+            fill
+            style={{ objectFit: "cover" }}
+            quality={100}
+            priority
+          />
+        </div>
       </div>
 
       <div className="container">
-        {/* โลโก้และหัวข้อ */}
         <div className="header">
           <div className="logo-wrapper">
             <Image
@@ -69,6 +64,13 @@ const AboutPage = () => {
           right: 0;
           bottom: 0;
           z-index: -1;
+          overflow: hidden;
+        }
+
+        .image-wrapper {
+          position: relative;
+          width: 100%;
+          height: 100vh;
           filter: brightness(0.75);
         }
 
@@ -77,7 +79,7 @@ const AboutPage = () => {
           max-width: 900px;
           margin: 60px auto 40px auto;
           padding: 40px 35px;
-          background-color: rgba(255 255 255 / 0.95);
+          background-color: rgba(255, 255, 255, 0.95);
           border-radius: 15px;
           box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
           font-family: "Kanit", sans-serif;
@@ -141,11 +143,6 @@ const AboutPage = () => {
           white-space: pre-line;
         }
 
-        .content-text br {
-          margin-bottom: 12px;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
           .container {
             margin: 40px 15px 30px;
@@ -205,6 +202,4 @@ const AboutPage = () => {
       `}</style>
     </>
   );
-};
-
-export default AboutPage;
+}
