@@ -30,7 +30,7 @@ export default function Navigation() {
     position: "relative",
     paddingBottom: "56.25%", // 16:9 ratio
     height: 0,
-    maxWidth: "900px", // ขยายวิดีโอใหญ่ขึ้น
+    maxWidth: "900px",
     margin: "20px auto 0",
     borderRadius: "24px",
     overflow: "hidden",
@@ -67,17 +67,16 @@ export default function Navigation() {
           { label: "เกี่ยวกับ", href: "/about" },
         ].map(({ label, href }, i) => (
           <li key={href}>
-            <Link href={href} legacyBehavior>
-              <a
-                style={{
-                  ...linkStyle,
-                  color: hovered === i ? "#22c55e" : linkStyle.color,
-                }}
-                onMouseEnter={() => setHovered(i)}
-                onMouseLeave={() => setHovered(null)}
-              >
-                {label}
-              </a>
+            <Link
+              href={href}
+              style={{
+                ...linkStyle,
+                color: hovered === i ? "#22c55e" : linkStyle.color,
+              }}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              {label}
             </Link>
           </li>
         ))}
