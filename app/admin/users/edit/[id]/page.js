@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2'
 import { useParams, useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Page() {
   const router = useRouter();
@@ -77,14 +78,27 @@ export default function Page() {
   // Styles แบบ inline
   const containerStyle = {
     minHeight: '100vh',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #fcb045 100%)',
+    position: 'relative',
+    fontFamily: '"Kanit", sans-serif',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '24px',
   };
 
+  const overlayStyle = {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    zIndex: 0,
+  };
+
   const formWrapperStyle = {
+    position: 'relative',
+    zIndex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: '12px',
     boxShadow: '0 8px 20px rgba(0, 0, 0, 0.15)',
@@ -138,6 +152,16 @@ export default function Page() {
 
   return (
     <div style={containerStyle}>
+      {/* Background image */}
+      <Image
+        src="/image/img/021.jpg" // ใส่ภาพพื้นหลังเหมือนหน้า About
+        alt="Background"
+        fill
+        style={{ objectFit: 'cover', zIndex: -1 }}
+        priority
+      />
+      <div style={overlayStyle}></div>
+
       <div style={formWrapperStyle}>
         <h1 style={headingStyle}>แก้ไขข้อมูลสมัครสมาชิก {id}</h1>
         {items.map((item) => (

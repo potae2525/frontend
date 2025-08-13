@@ -101,11 +101,16 @@ export default function AboutPage() {
           width: 60px;
           height: 60px;
           background: white;
+          transition: transform 0.3s ease;
+        }
+        .logo-wrapper:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         }
 
         .title {
           font-size: 3rem;
-          font-weight: 800;
+          font-weight: 700;
           color: #1a1a1a;
           text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
           margin: 0;
@@ -113,7 +118,7 @@ export default function AboutPage() {
 
         .intro-text {
           font-size: 1.8rem;
-          color: #3a4a5a;
+          color: #2f3e50; /* ปรับเป็นสีเข้มขึ้นเล็กน้อย */
           text-align: center;
           margin-bottom: 45px;
           font-weight: 600;
@@ -126,7 +131,7 @@ export default function AboutPage() {
 
         .large-text {
           font-size: 2.2rem;
-          font-weight: 700;
+          font-weight: 600;
         }
 
         .content-text {
@@ -141,6 +146,8 @@ export default function AboutPage() {
           box-shadow: 0 4px 25px rgba(0, 0, 0, 0.08);
           margin-top: 25px;
           white-space: pre-line;
+          /* เพิ่มช่องว่างระหว่างย่อหน้า */
+          margin-bottom: 20px;
         }
 
         @media (max-width: 768px) {

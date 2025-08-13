@@ -69,7 +69,7 @@ export default function Navigation() {
               { label: "หน้าแรก", href: "/" },
               { label: "บริการ", href: "/service" },
               { label: "ติดต่อ", href: "/contact" },
-              { label: "เกี่ยวกับ", href: "/about" },
+              { label: "เกี่ยวกับ", href: "/adout" },
             ].map(({ label, href }) => (
               <li className="nav-item" key={href}>
                 <Link
