@@ -47,7 +47,7 @@ export default function Page() {
       if (res.ok) {
         Swal.fire({
           icon: 'success',
-          title: '<h3>ปรับปรุงข้อมูลเรียบร้อยแล้ว</h3>',
+          title: '<h3>ปรับปรุงข้อมูลเรียบร้อยแล้วนะ</h3>',
           showConfirmButton: false,
           timer: 2000,
         }).then(() => {
