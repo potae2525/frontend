@@ -19,7 +19,7 @@ export default function Page() {
           return;
         }
 
-        const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
+        const res = await fetch('/api/users');
         if (!res.ok) {
           console.error('Failed to fetch data');
           return;
@@ -53,7 +53,7 @@ export default function Page() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`http://itdev.cmtc.ac.th:3000/api/users/${id}`, {
+        const res = await fetch(`/api/users/${id}`, {
           method: 'DELETE',
         });
         if (!res.ok) {
