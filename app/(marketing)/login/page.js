@@ -1,23 +1,32 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import Swal from "sweetalert2"; // เพิ่ม SweetAlert2
+import Swal from "sweetalert2";
 
 export default function SignInForm() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [remember, setRemember] = useState(false); // ✅ เพิ่ม remember
+  const [errors, setErrors] = useState({ username: "", password: "" });
+  const router = useRouter();
+
+  // โหลดค่าจาก localStorage เมื่อเริ่มต้น
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("savedUsername");
+    const savedPassword = localStorage.getItem("savedPassword");
+    if (savedUsername) setUsername(savedUsername);
+    if (savedPassword) setPassword(savedPassword);
+    if (savedUsername || savedPassword) setRemember(true); // ✅ กำหนด checkbox เป็น true หากมีข้อมูล
+  }, []);
 
   const validate = () => {
     let valid = true;
-    const newErrors = { email: "", password: "" };
+    const newErrors = { username: "", password: "" };
 
-    if (!email.trim()) {
-      newErrors.email = "โปรดกรอกอีเมล";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "รูปแบบอีเมลไม่ถูกต้อง";
+    if (!username.trim()) {
+      newErrors.username = "โปรดกรอกชื่อผู้ใช้";
       valid = false;
     }
 
@@ -40,16 +49,56 @@ export default function SignInForm() {
     return valid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validate()) return;
 
-    Swal.fire({
-      icon: "success",
-      title: "เข้าสู่ระบบสำเร็จ!",
-      text: `ยินดีต้อนรับ, ${email}`,
-    });
+    try {
+      const res = await fetch("http://itdev.cmtc.ac.th:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      console.log("Login Response:", data);
+
+      if (data.token) {
+        // บันทึก token ใน localStorage
+        localStorage.setItem("token", data.token);
+
+        // ✅ บันทึกหรือเคลียร์ username/password ตาม checkbox
+        if (remember) {
+          localStorage.setItem("savedUsername", username);
+          localStorage.setItem("savedPassword", password);
+        } else {
+          localStorage.removeItem("savedUsername");
+          localStorage.removeItem("savedPassword");
+        }
+
+        Swal.fire({
+          icon: "success",
+          title: "เข้าสู่ระบบสำเร็จ!",
+          text: `ยินดีต้อนรับ, ${username}`,
+        }).then(() => {
+          router.push("/admin/users");
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "เข้าสู่ระบบไม่สำเร็จ",
+          text: data.message || "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+        });
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้",
+      });
+    }
   };
 
   return (
@@ -112,24 +161,24 @@ export default function SignInForm() {
             เข้าสู่ระบบ
           </h2>
 
-          {/* Email */}
+          {/* Username */}
           <div className="mb-4">
-            <label htmlFor="email" className="form-label fw-semibold">
-              อีเมล
+            <label htmlFor="username" className="form-label fw-semibold">
+              ชื่อผู้ใช้
             </label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="username"
               className={`form-control shadow-sm rounded-4 ${
-                errors.email ? "is-invalid" : ""
+                errors.username ? "is-invalid" : ""
               }`}
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
-            {errors.email && (
+            {errors.username && (
               <div className="invalid-feedback" style={{ display: "block" }}>
-                {errors.email}
+                {errors.username}
               </div>
             )}
           </div>
@@ -154,6 +203,20 @@ export default function SignInForm() {
                 {errors.password}
               </div>
             )}
+          </div>
+
+          {/* Remember me */}
+          <div className="mb-3 form-check">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              id="remember"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            <label className="form-check-label" htmlFor="remember">
+              จำชื่อผู้ใช้และรหัสผ่าน
+            </label>
           </div>
 
           {/* ลืมรหัสผ่าน */}

@@ -2,30 +2,42 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
   const [items, setItems] = useState([]);
   const [hoveredRow, setHoveredRow] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function getUsers() {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          router.push('/login');
+          return;
+        }
+
         const res = await fetch('http://itdev.cmtc.ac.th:3000/api/users');
         if (!res.ok) {
           console.error('Failed to fetch data');
           return;
         }
+
         const data = await res.json();
         setItems(data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     }
 
     getUsers();
     const interval = setInterval(getUsers, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [router]);
 
   const deleteUser = async (id) => {
     const result = await Swal.fire({
@@ -57,22 +69,60 @@ export default function Page() {
     }
   };
 
+  // ฟังก์ชัน logout พร้อมหน้าต่างยืนยัน
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: 'คุณแน่ใจไหม?',
+      text: "ต้องการออกจากระบบจริงหรือไม่?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e53935',
+      cancelButtonColor: '#1976d2',
+      confirmButtonText: 'ใช่, ออกจากระบบ!',
+      cancelButtonText: 'ยกเลิก',
+    });
+
+    if (result.isConfirmed) {
+      localStorage.removeItem('token');
+      router.push('/login');
+      Swal.fire('ออกจากระบบแล้ว!', '', 'success');
+    }
+  };
+
   const containerStyle = {
     maxWidth: '1200px',
     margin: 'auto',
     fontFamily: `'Segoe UI', Tahoma, Geneva, Verdana, sans-serif`,
     color: '#333',
     padding: '20px',
+    minHeight: '100vh',
+  };
+
+  const headingWrapperStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
   };
 
   const headingStyle = {
     fontSize: '2rem',
     fontWeight: '700',
-    marginBottom: '20px',
     color: '#1976d2',
-    textAlign: 'center',
     textTransform: 'uppercase',
     letterSpacing: '1.5px',
+  };
+
+  const logoutBtnStyle = {
+    backgroundColor: '#e53935',
+    color: 'white',
+    padding: '8px 16px',
+    borderRadius: '8px',
+    border: 'none',
+    cursor: 'pointer',
+    fontWeight: '600',
+    boxShadow: '0 3px 8px rgba(0,0,0,0.15)',
+    transition: 'all 0.3s ease',
   };
 
   const tableStyle = {
@@ -98,10 +148,6 @@ export default function Page() {
     textOverflow: 'ellipsis',
     textAlign: 'left',
     fontSize: '0.95rem',
-  };
-
-  const thStyle = {
-    ...thTdStyle,
   };
 
   const trStyle = (id) => ({
@@ -141,23 +187,32 @@ export default function Page() {
       : '0 3px 8px rgba(0,0,0,0.15)';
   };
 
+  if (loading) {
+    return <div className='text-center'><h1>Loading...</h1></div>;
+  }
+
   return (
     <div style={containerStyle}>
-      <h4 style={headingStyle}>Users List</h4>
+      {/* หัวตาราง + ปุ่ม logout */}
+      <div style={headingWrapperStyle}>
+        <h4 style={headingStyle}>Users List</h4>
+        <button style={logoutBtnStyle} onClick={handleLogout}>ออกจากระบบ</button>
+      </div>
+
       <table style={tableStyle}>
         <thead style={theadStyle}>
           <tr>
-            <th style={{ ...thStyle, textAlign: 'center' }}>#</th>
-            <th style={thStyle}>Firstname</th>
-            <th style={thStyle}>Fullname</th>
-            <th style={thStyle}>Lastname</th>
-            <th style={thStyle}>Username</th>
-            <th style={thStyle}>Password</th>
-            <th style={{ ...thStyle, maxWidth: '300px' }}>Address</th>
-            <th style={thStyle}>Sex</th>
-            <th style={thStyle}>Birthday</th>
-            <th style={{ ...thStyle, textAlign: 'center' }}>Edit</th>
-            <th style={{ ...thStyle, textAlign: 'center' }}>Delete</th>
+            <th style={{ ...thTdStyle, textAlign: 'center' }}>#</th>
+            <th style={thTdStyle}>Firstname</th>
+            <th style={thTdStyle}>Fullname</th>
+            <th style={thTdStyle}>Lastname</th>
+            <th style={thTdStyle}>Username</th>
+            <th style={thTdStyle}>Password</th>
+            <th style={{ ...thTdStyle, maxWidth: '300px' }}>Address</th>
+            <th style={thTdStyle}>Sex</th>
+            <th style={thTdStyle}>Birthday</th>
+            <th style={{ ...thTdStyle, textAlign: 'center' }}>Edit</th>
+            <th style={{ ...thTdStyle, textAlign: 'center' }}>Delete</th>
           </tr>
         </thead>
         <tbody>
